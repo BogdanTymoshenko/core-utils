@@ -4,3 +4,11 @@
 /.idea/libraries
 .DS_Store
 /build
+
+#IntelliJ IDEA
+.idea
+*.iml
+library/facebook/*.iml
+*.ipr
+*.iws
+classes
