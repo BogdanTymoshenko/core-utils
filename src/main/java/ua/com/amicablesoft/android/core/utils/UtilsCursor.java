@@ -91,6 +91,19 @@ public final class UtilsCursor {
         return c.getLong(columnIdx);
     }
 
+    public static Long readLong(Cursor c, String columnName, Long defaultValue) {
+        int columnIdx = c.getColumnIndex(columnName);
+        if (columnIdx == -1) {
+            Log.e(TAG, "Fail to read column Long value - column "+columnName+" not found.");
+            return defaultValue;
+        }
+
+        if (c.isNull(columnIdx))
+            return defaultValue;
+
+        return c.getLong(columnIdx);
+    }
+
 
     private UtilsCursor() {}
 }
