@@ -4,13 +4,14 @@ import android.database.Cursor;
 import android.util.Log;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * Created by Bogdan Tymoshenko <bogdan.tymoshenko@gmail.com> on 09.12.14.
  */
-public final class UtilsCursor {
+public final class UtilsSqlite {
 
-    private static final String TAG = UtilsCursor.class.getSimpleName();
+    private static final String TAG = UtilsSqlite.class.getSimpleName();
 
 
     public static int readInt(Cursor c, String columnName, int defaultValue) {
@@ -104,6 +105,33 @@ public final class UtilsCursor {
         return c.getLong(columnIdx);
     }
 
+    public static Long readLong(Cursor c, String columnName) {
+        return readLong(c, columnName, null);
+    }
 
-    private UtilsCursor() {}
+    public static Date readDate(Cursor c, String columnName) {
+        Long timestamp = readLong(c, columnName);
+        return timestamp != null ? new Date(timestamp) : null;
+    }
+
+
+    public static Long writeDate(Date date) {
+        if (date == null)
+            return null;
+
+        return date.getTime();
+    }
+
+    public static Boolean isNull(Cursor c, String columnName) {
+        int columnIdx = c.getColumnIndex(columnName);
+        if (columnIdx == -1) {
+            Log.e(TAG, "Fail to check is column NULL - column "+columnName+" not found.");
+            return null;
+        }
+
+        return c.isNull(columnIdx);
+    }
+
+
+    private UtilsSqlite() {}
 }
