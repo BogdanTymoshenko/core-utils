@@ -114,6 +114,21 @@ public final class UtilsSqlite {
         return timestamp != null ? new Date(timestamp) : null;
     }
 
+    public static float readFloat(Cursor c, String columnName, float defaultValue) {
+        int columnIdx = c.getColumnIndex(columnName);
+        if (columnIdx == -1) {
+            Log.e(TAG, "Fail to read column float value - column "+columnName+" not found.");
+            return defaultValue;
+        }
+
+        if (c.isNull(columnIdx))
+            return defaultValue;
+
+        return c.getFloat(columnIdx);
+    }
+
+
+
 
     public static Long writeDate(Date date) {
         if (date == null)
