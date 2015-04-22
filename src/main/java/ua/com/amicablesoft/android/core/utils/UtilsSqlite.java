@@ -66,6 +66,19 @@ public final class UtilsSqlite {
         return new BigDecimal(c.getDouble(columnIdx));
     }
 
+    public static boolean readBoolean(Cursor c, String columnName, boolean defaultValud) {
+        int columnIdx = c.getColumnIndex(columnName);
+        if (columnIdx == -1) {
+            Log.e(TAG, "Fail to read column boolean value - column "+columnName+" not found.");
+            return defaultValud;
+        }
+
+        if (c.isNull(columnIdx))
+            return defaultValud;
+
+        return c.getInt(columnIdx) > 0;
+    }
+
     public static Boolean readBoolean(Cursor c, String columnName) {
         int columnIdx = c.getColumnIndex(columnName);
         if (columnIdx == -1) {
