@@ -21,23 +21,33 @@ public final class UtilsGCM {
     }
 
     public static String doRegistration(Context ctx, String senderId) throws IOException {
-        String regId = getRegistrationId(ctx);
+        String regId = getRegistrationId(ctx, senderId);
         if (TextUtils.isEmpty(regId)) {
             Context appContext = ctx.getApplicationContext();
 
             GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(appContext);
             regId = gcm.register(senderId);
-            GCMRegistrationDataHolder.saveRegistrationInfo(appContext, regId, UtilsApp.getAppVersion(appContext));
+            GCMRegistrationDataHolder.saveRegistrationInfo(appContext, senderId, regId, UtilsApp.getAppVersion(appContext));
         }
 
         return regId;
     }
 
+    public static void clear(Context context, @StringRes int senderId) throws IOException {
+        clear(context, context.getString(senderId));
+    }
 
-    private static String getRegistrationId(Context ctx) {
+    public static void clear(Context context, String senderId) throws IOException {
+        GCMRegistrationDataHolder.clearRegistrationInfo(context, senderId);
+//        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
+//        gcm.unregister();
+    }
+
+
+    private static String getRegistrationId(Context ctx, String senderId) {
         Context appContext = ctx.getApplicationContext();
 
-        String registrationId = GCMRegistrationDataHolder.getRegistrationId(appContext);
+        String registrationId = GCMRegistrationDataHolder.getRegistrationId(appContext, senderId);
         if (TextUtils.isEmpty(registrationId)) {
             Log.i(TAG, "GCM registration ID not found.");
             return null;
@@ -46,7 +56,7 @@ public final class UtilsGCM {
         // Check if app was updated; if so, it must clear the registration ID
         // since the existing regID is not guaranteed to work with the new
         // app version.
-        int registeredVersion = GCMRegistrationDataHolder.getRegistrationAppVersion(appContext);
+        int registeredVersion = GCMRegistrationDataHolder.getRegistrationAppVersion(appContext, senderId);
         int currentVersion = UtilsApp.getAppVersion(appContext);
         if (registeredVersion != currentVersion) {
             Log.i(TAG, "GCM registration app version changed.");
