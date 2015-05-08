@@ -1,5 +1,6 @@
 package ua.com.amicablesoft.android.core.utils;
 
+import android.database.Cursor;
 import android.util.Log;
 
 import java.io.Closeable;
@@ -15,7 +16,12 @@ public final class UtilsClosable {
     public static void closeSafe(Closeable closeable) {
         if (closeable != null)
             try {
-                closeable.close();
+                if (closeable instanceof Cursor) {
+                    ((Cursor)closeable).close();
+                }
+                else {
+                    closeable.close();
+                }
             }
             catch (Exception ex) {
                 Log.e(TAG, "Error during close call", ex);
