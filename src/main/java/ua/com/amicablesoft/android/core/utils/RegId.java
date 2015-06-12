@@ -22,4 +22,12 @@ public class RegId {
     /*package*/ void setPreviouslyRegId(String previouslyRegId) {
         this.previouslyRegId = previouslyRegId;
     }
+
+    @Override
+    public String toString() {
+        return "RegId{" +
+                "regId='" + regId + '\'' +
+                ", previouslyRegId='" + previouslyRegId + '\'' +
+                '}';
+    }
 }
