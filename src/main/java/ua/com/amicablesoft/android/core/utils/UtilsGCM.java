@@ -16,10 +16,23 @@ public final class UtilsGCM {
 
     private static final String TAG = UtilsGCM.class.getSimpleName();
 
+    public static RegId performRegistration(Context ctx, @StringRes int senderIdRes) throws IOException {
+        String currentRegId = GCMRegistrationDataHolder.getRegistrationId(ctx, ctx.getString(senderIdRes));
+        String regId = doRegistration(ctx, ctx.getString(senderIdRes));
+
+        RegId result = new RegId();
+        result.setRegId(regId);
+        if (!UtilsObject.equals(currentRegId, regId))
+            result.setPreviouslyRegId(currentRegId);
+        return result;
+    }
+
+    @Deprecated
     public static String doRegistration(Context ctx, @StringRes int senderIdRes) throws IOException {
         return doRegistration(ctx, ctx.getString(senderIdRes));
     }
 
+    @Deprecated
     public static String doRegistration(Context ctx, String senderId) throws IOException {
         String regId = getRegistrationId(ctx, senderId);
         if (TextUtils.isEmpty(regId)) {
