@@ -140,6 +140,19 @@ public final class UtilsSqlite {
         return c.getFloat(columnIdx);
     }
 
+    public static Float readFloat(Cursor c, String columnName) {
+        int columnIdx = c.getColumnIndex(columnName);
+        if (columnIdx == -1) {
+            Log.e(TAG, "Fail to read column float value - column "+columnName+" not found.");
+            return null;
+        }
+
+        if (c.isNull(columnIdx))
+            return null;
+
+        return c.getFloat(columnIdx);
+    }
+
 
 
 
