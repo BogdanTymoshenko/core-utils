@@ -52,8 +52,8 @@ public final class UtilsGCM {
 
     public static void clear(Context context, String senderId) throws IOException {
         GCMRegistrationDataHolder.clearRegistrationInfo(context, senderId);
-//        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
-//        gcm.unregister();
+        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
+        gcm.unregister();
     }
 
 
