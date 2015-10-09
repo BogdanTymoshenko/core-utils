@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.google.android.gms.gcm.GoogleCloudMessaging;
+import com.google.android.gms.iid.InstanceID;
 
 import java.io.IOException;
 
@@ -27,19 +28,14 @@ public final class UtilsGCM {
         return result;
     }
 
-    @Deprecated
-    public static String doRegistration(Context ctx, @StringRes int senderIdRes) throws IOException {
-        return doRegistration(ctx, ctx.getString(senderIdRes));
-    }
-
-    @Deprecated
-    public static String doRegistration(Context ctx, String senderId) throws IOException {
+    private static String doRegistration(Context ctx, String senderId) throws IOException {
         String regId = getRegistrationId(ctx, senderId);
         if (TextUtils.isEmpty(regId)) {
             Context appContext = ctx.getApplicationContext();
 
-            GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(appContext);
-            regId = gcm.register(senderId);
+            InstanceID instanceID = InstanceID.getInstance(appContext);
+            regId = instanceID.getToken(senderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE, null);
+
             GCMRegistrationDataHolder.saveRegistrationInfo(appContext, senderId, regId, UtilsApp.getAppVersion(appContext));
         }
 
@@ -52,8 +48,9 @@ public final class UtilsGCM {
 
     public static void clear(Context context, String senderId) throws IOException {
         GCMRegistrationDataHolder.clearRegistrationInfo(context, senderId);
-        GoogleCloudMessaging gcm = GoogleCloudMessaging.getInstance(context);
-        gcm.unregister();
+        Context appContext = context.getApplicationContext();
+        InstanceID instanceID = InstanceID.getInstance(appContext);
+        instanceID.deleteToken(senderId, GoogleCloudMessaging.INSTANCE_ID_SCOPE);
     }
 
 
